@@ -68,21 +68,21 @@ const testimonials = [
     id: 1,
     name: 'Priya Sharma',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=988&q=80',
-    quote: 'The quality of Klassico jeans is unmatched. I've been a loyal customer for years and have never been disappointed.',
+    quote: "The quality of Klassico jeans is unmatched. I've been a loyal customer for years and have never been disappointed.",
     rating: 5
   },
   {
     id: 2,
     name: 'Arjun Patel',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
-    quote: 'Their blazers are perfect for both formal meetings and casual outings. The attention to detail is impressive.',
+    quote: "Their blazers are perfect for both formal meetings and casual outings. The attention to detail is impressive.",
     rating: 5
   },
   {
     id: 3,
     name: 'Meera Desai',
     image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=986&q=80',
-    quote: 'I absolutely love my kurtis from Klassico. They blend traditional elements with modern designs beautifully.',
+    quote: "I absolutely love my kurtis from Klassico. They blend traditional elements with modern designs beautifully.",
     rating: 4
   }
 ];
