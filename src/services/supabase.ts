@@ -127,11 +127,15 @@ export async function getProducts(options: {
     if (error) throw error;
     
     // Format the data to include the category
-    return (data || []).map(item => ({
-      ...item,
-      category: item.categories,
-      categories: undefined  // Remove the categories property
-    }));
+    return (data || []).map(item => {
+      // Create a new object without the categories property
+      const { categories, ...productData } = item;
+      // Add the category property with the value from categories
+      return {
+        ...productData,
+        category: categories
+      };
+    });
   } catch (error) {
     console.error('Error fetching products:', error);
     toast.error('Failed to load products');
@@ -151,10 +155,12 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     if (error) throw error;
     
     if (data) {
+      // Create a new object without the categories property
+      const { categories, ...productData } = data;
+      // Return a new object with the category property
       return {
-        ...data,
-        category: data.categories,
-        categories: undefined  // Remove the categories property
+        ...productData,
+        category: categories
       };
     }
     
