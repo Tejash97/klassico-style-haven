@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/ui/navbar';
@@ -28,13 +27,11 @@ const ProductDetailPage = () => {
       setProduct(productData);
       
       if (productData?.category_id) {
-        // Fetch related products from the same category
         const related = await getProducts({
           categoryId: productData.category_id,
           limit: 4
         });
         
-        // Filter out the current product
         setRelatedProducts(related.filter(p => p.id !== productData.id));
       }
       
@@ -76,7 +73,6 @@ const ProductDetailPage = () => {
     }
   };
 
-  // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -85,7 +81,6 @@ const ProductDetailPage = () => {
     }).format(price);
   };
 
-  // Calculate discounted price
   const calculateDiscountedPrice = (price: number, discount: number | null) => {
     if (!discount) return price;
     return price * (1 - discount / 100);
@@ -127,7 +122,6 @@ const ProductDetailPage = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumbs */}
         <nav className="mb-8">
           <ol className="flex text-sm">
             <li className="flex items-center">
@@ -149,9 +143,7 @@ const ProductDetailPage = () => {
           </ol>
         </nav>
         
-        {/* Product details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Product image */}
           <div className="relative">
             <div className="aspect-[3/4] rounded-lg overflow-hidden bg-gray-100">
               <img 
@@ -161,7 +153,6 @@ const ProductDetailPage = () => {
               />
             </div>
             
-            {/* Badges */}
             <div className="absolute top-4 left-4 flex flex-col gap-2">
               {product.is_new && (
                 <span className="bg-klassico-navy text-white px-3 py-1 text-xs font-medium rounded-full">
@@ -176,7 +167,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
           
-          {/* Product info */}
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
             
@@ -216,7 +206,6 @@ const ProductDetailPage = () => {
               </div>
             )}
             
-            {/* Quantity selector */}
             <div className="mb-8">
               <h3 className="font-semibold mb-2">Quantity</h3>
               <div className="flex items-center">
@@ -242,7 +231,6 @@ const ProductDetailPage = () => {
               </div>
             </div>
             
-            {/* Add to cart button */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={handleAddToCart}
@@ -266,7 +254,6 @@ const ProductDetailPage = () => {
               </button>
             </div>
             
-            {/* Availability */}
             <div className="mt-8">
               <p className="text-sm">
                 <span className="font-medium">Availability:</span>{" "}
@@ -278,7 +265,6 @@ const ProductDetailPage = () => {
           </div>
         </div>
         
-        {/* Related products */}
         {relatedProducts.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold mb-6">You might also like</h2>
@@ -286,16 +272,7 @@ const ProductDetailPage = () => {
               {relatedProducts.map(relatedProduct => (
                 <ProductCard 
                   key={relatedProduct.id}
-                  id={relatedProduct.id}
-                  name={relatedProduct.name}
-                  price={relatedProduct.price}
-                  imageSrc={relatedProduct.image_url}
-                  hoverImageSrc={relatedProduct.hover_image_url || undefined}
-                  category={relatedProduct.category?.name || ''}
-                  isNew={relatedProduct.is_new || false}
-                  isSale={relatedProduct.is_sale || false}
-                  discount={relatedProduct.discount || 0}
-                  onAddToCart={() => addToCart(relatedProduct)}
+                  product={relatedProduct}
                 />
               ))}
             </div>
