@@ -130,7 +130,7 @@ export async function getProducts(options: {
     return (data || []).map(item => ({
       ...item,
       category: item.categories,
-      categories: undefined
+      categories: undefined  // Remove the categories property
     }));
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -154,7 +154,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       return {
         ...data,
         category: data.categories,
-        categories: undefined
+        categories: undefined  // Remove the categories property
       };
     }
     
