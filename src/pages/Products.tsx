@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
 import ProductCard from '@/components/ui/product-card';
+import GenderFilter from '@/components/ui/gender-filter';
 import { getProducts, Product, getCategories, Category } from '@/services/supabase';
 import { Loader2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
@@ -24,6 +25,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug }) => {
   const { addToCart } = useCart();
 
   const searchQuery = searchParams.get('search');
+  const genderFilter = searchParams.get('gender');
 
   useEffect(() => {
     // Load categories
@@ -55,6 +57,10 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug }) => {
         options.categorySlug = selectedCategory;
       }
       
+      if (genderFilter) {
+        options.gender = genderFilter;
+      }
+      
       if (filterNew) {
         options.isNew = true;
       }
@@ -81,7 +87,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug }) => {
     };
     
     fetchProducts();
-  }, [selectedCategory, sortBy, filterNew, filterSale, searchQuery]);
+  }, [selectedCategory, sortBy, filterNew, filterSale, searchQuery, genderFilter]);
 
   // Handle adding to cart
   const handleAddToCart = (productId: string) => {
@@ -104,6 +110,11 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug }) => {
                 ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}` 
                 : 'All Products'}
           </h1>
+          
+          {/* Gender Filter */}
+          <div className="mt-4 flex justify-center">
+            <GenderFilter />
+          </div>
         </div>
         
         {/* Filters */}
@@ -126,7 +137,12 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug }) => {
                     onClick={() => setSelectedCategory(category.slug)} 
                     className={`w-full text-left px-2 py-1 rounded ${selectedCategory === category.slug ? 'bg-klassico-navy text-white' : 'hover:bg-gray-100'}`}
                   >
-                    {category.name}
+                    {category.name} 
+                    {category.gender && category.gender !== 'unisex' && (
+                      <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-200">
+                        {category.gender === 'male' ? 'Men' : 'Women'}
+                      </span>
+                    )}
                   </button>
                 </li>
               ))}
@@ -191,6 +207,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug }) => {
                 imageSrc={product.image_url}
                 hoverImageSrc={product.hover_image_url || undefined}
                 category={product.category?.name || ''}
+                gender={product.gender || undefined}
                 isNew={product.is_new || false}
                 isSale={product.is_sale || false}
                 discount={product.discount || 0}

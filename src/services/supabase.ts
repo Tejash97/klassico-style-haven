@@ -9,6 +9,8 @@ export interface Category {
   description: string | null;
   image_url: string | null;
   slug: string;
+  gender: string | null;
+  featured_order: number | null;
 }
 
 // Product types
@@ -25,6 +27,7 @@ export interface Product {
   discount: number | null;
   stock_quantity: number | null;
   slug: string;
+  gender: string | null;
   category?: Category;
 }
 
@@ -44,12 +47,26 @@ export interface CartItem {
 }
 
 // Fetch all categories
-export async function getCategories(): Promise<Category[]> {
+export async function getCategories(options: {
+  gender?: string;
+  featured?: boolean;
+} = {}): Promise<Category[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('categories')
-      .select('*')
-      .order('name');
+      .select('*');
+    
+    if (options.gender) {
+      query = query.eq('gender', options.gender);
+    }
+    
+    if (options.featured) {
+      query = query.order('featured_order', { ascending: true });
+    } else {
+      query = query.order('name');
+    }
+    
+    const { data, error } = await query;
     
     if (error) throw error;
     return data || [];
@@ -81,10 +98,12 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 export async function getProducts(options: {
   categoryId?: string;
   categorySlug?: string;
+  gender?: string;
   limit?: number;
   isNew?: boolean;
   isSale?: boolean;
   sortBy?: string;
+  featured?: boolean;
 } = {}): Promise<Product[]> {
   try {
     let query = supabase
@@ -101,6 +120,10 @@ export async function getProducts(options: {
       if (category) {
         query = query.eq('category_id', category.id);
       }
+    }
+    
+    if (options.gender) {
+      query = query.eq('gender', options.gender);
     }
     
     if (options.isNew !== undefined) {

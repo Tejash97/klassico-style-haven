@@ -13,6 +13,8 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          featured_order: number | null
+          gender: string | null
           id: string
           image_url: string | null
           name: string
@@ -22,6 +24,8 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          featured_order?: number | null
+          gender?: string | null
           id?: string
           image_url?: string | null
           name: string
@@ -31,6 +35,8 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          featured_order?: number | null
+          gender?: string | null
           id?: string
           image_url?: string | null
           name?: string
@@ -129,6 +135,7 @@ export type Database = {
           created_at: string
           description: string | null
           discount: number | null
+          gender: string | null
           hover_image_url: string | null
           id: string
           image_url: string
@@ -145,6 +152,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           discount?: number | null
+          gender?: string | null
           hover_image_url?: string | null
           id?: string
           image_url: string
@@ -161,6 +169,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           discount?: number | null
+          gender?: string | null
           hover_image_url?: string | null
           id?: string
           image_url?: string

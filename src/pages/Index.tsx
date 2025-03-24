@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/ui/navbar';
 import Hero from '@/components/ui/hero';
 import CategoryCard from '@/components/ui/category-card';
 import ProductCard from '@/components/ui/product-card';
 import Newsletter from '@/components/ui/newsletter';
 import Footer from '@/components/ui/footer';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star, Users } from 'lucide-react';
 import { getProducts, getCategories, getTestimonials, Category, Product, Testimonial } from '@/services/supabase';
 import { useCart } from '@/contexts/CartContext';
 
@@ -23,8 +24,8 @@ const Index = () => {
     const fetchData = async () => {
       setLoading(true);
       
-      // Fetch categories
-      const categoriesData = await getCategories();
+      // Fetch featured categories in order
+      const categoriesData = await getCategories({ featured: true });
       setCategories(categoriesData);
       
       // Fetch trending products
@@ -82,6 +83,77 @@ const Index = () => {
       {/* Hero Section */}
       <Hero />
       
+      {/* Gender Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12 reveal">
+            <span className="text-sm text-klassico-navy font-semibold uppercase tracking-wider">Shop By</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4">Gender</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div 
+              className="relative h-80 overflow-hidden rounded-xl shadow-lg transition-all duration-500 cursor-pointer reveal group"
+              onClick={() => window.location.href = '/products?gender=male'}
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80" 
+                alt="Men's Collection" 
+                className="w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent group-hover:opacity-90"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-6 z-10 text-white">
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 transition-transform duration-500 group-hover:translate-y-0">Men</h3>
+                <div className="flex items-center transition-all duration-500 group-hover:translate-x-0 opacity-100">
+                  <span className="text-sm font-medium mr-2">Shop Collection</span>
+                  <ChevronRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+              </div>
+            </div>
+            
+            <div 
+              className="relative h-80 overflow-hidden rounded-xl shadow-lg transition-all duration-500 cursor-pointer reveal group"
+              onClick={() => window.location.href = '/products?gender=female'}
+              style={{ transitionDelay: '0.1s' }}
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1552266080-9db174b37b62?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=991&q=80" 
+                alt="Women's Collection" 
+                className="w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent group-hover:opacity-90"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-6 z-10 text-white">
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 transition-transform duration-500 group-hover:translate-y-0">Women</h3>
+                <div className="flex items-center transition-all duration-500 group-hover:translate-x-0 opacity-100">
+                  <span className="text-sm font-medium mr-2">Shop Collection</span>
+                  <ChevronRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+              </div>
+            </div>
+            
+            <div 
+              className="relative h-80 overflow-hidden rounded-xl shadow-lg transition-all duration-500 cursor-pointer reveal group"
+              onClick={() => window.location.href = '/products?gender=unisex'}
+              style={{ transitionDelay: '0.2s' }}
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1523381294911-8d3cead13475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                alt="Unisex Collection" 
+                className="w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent group-hover:opacity-90"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-6 z-10 text-white">
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 transition-transform duration-500 group-hover:translate-y-0">Unisex</h3>
+                <div className="flex items-center transition-all duration-500 group-hover:translate-x-0 opacity-100">
+                  <span className="text-sm font-medium mr-2">Shop Collection</span>
+                  <ChevronRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* Categories Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -104,6 +176,15 @@ const Index = () => {
                 delay={index}
               />
             ))}
+          </div>
+          
+          <div className="text-center mt-10">
+            <Link 
+              to="/products" 
+              className="inline-block px-5 py-3 bg-klassico-navy text-white rounded-md font-medium hover:bg-opacity-90 transition-all duration-300"
+            >
+              View All Categories
+            </Link>
           </div>
         </div>
       </section>
@@ -129,6 +210,7 @@ const Index = () => {
                 imageSrc={product.image_url}
                 hoverImageSrc={product.hover_image_url || undefined}
                 category={product.category?.name || ''}
+                gender={product.gender || undefined}
                 isNew={product.is_new || false}
                 isSale={product.is_sale || false}
                 discount={product.discount || 0}
@@ -139,12 +221,12 @@ const Index = () => {
           </div>
           
           <div className="text-center mt-12 reveal">
-            <a 
-              href="/products" 
+            <Link 
+              to="/products" 
               className="inline-block px-6 py-3 bg-klassico-navy text-white rounded-md font-medium hover:bg-opacity-90 transition-all duration-300"
             >
               View All Products
-            </a>
+            </Link>
           </div>
         </div>
       </section>

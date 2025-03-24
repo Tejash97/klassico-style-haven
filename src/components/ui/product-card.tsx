@@ -10,6 +10,7 @@ interface ProductCardProps {
   imageSrc: string;
   hoverImageSrc?: string;
   category: string;
+  gender?: string;
   isNew?: boolean;
   isSale?: boolean;
   discount?: number;
@@ -24,6 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   imageSrc,
   hoverImageSrc,
   category,
+  gender,
   isNew = false,
   isSale = false,
   discount = 0,
@@ -63,6 +65,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
         maximumFractionDigits: 0
       }).format(price / (1 - discount/100))
     : null;
+
+  const genderLabel = gender === 'male' ? 'Men' : gender === 'female' ? 'Women' : '';
 
   return (
     <a 
@@ -124,6 +128,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
         
+        {/* Gender badge if applicable */}
+        {gender && gender !== 'unisex' && (
+          <div className="absolute top-3 right-3 px-3 py-1 text-xs font-medium rounded-full bg-white text-klassico-dark z-10">
+            {genderLabel}
+          </div>
+        )}
+        
         {/* Quick action buttons */}
         <div className={cn(
           "absolute bottom-0 left-0 right-0 p-3 flex justify-center gap-2 transition-all duration-500 bg-gradient-to-t from-black/30 to-transparent",
@@ -152,7 +163,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
       
       {/* Product details */}
       <div className="p-4">
-        <div className="mb-1 text-xs text-gray-500 uppercase tracking-wide">{category}</div>
+        <div className="mb-1 text-xs text-gray-500 uppercase tracking-wide flex justify-between">
+          <span>{category}</span>
+          {gender && gender !== 'unisex' && (
+            <span className="text-xs text-klassico-navy">{genderLabel}</span>
+          )}
+        </div>
         <h3 className="font-medium text-klassico-dark mb-1 transition-colors duration-300 group-hover:text-klassico-navy">
           {name}
         </h3>
