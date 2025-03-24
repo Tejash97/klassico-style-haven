@@ -6,7 +6,7 @@ import CategoryCard from '@/components/ui/category-card';
 import ProductCard from '@/components/ui/product-card';
 import Newsletter from '@/components/ui/newsletter';
 import Footer from '@/components/ui/footer';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 
 // Sample product data (would normally come from Supabase)
