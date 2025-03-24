@@ -1,185 +1,110 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Product } from '@/services/supabase';
 import { ShoppingBag, Heart } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
-  id: string;
-  name: string;
-  price: number;
-  imageSrc: string;
-  hoverImageSrc?: string;
-  category: string;
-  gender?: string;
-  isNew?: boolean;
-  isSale?: boolean;
-  discount?: number;
-  delay?: number;
-  onAddToCart?: (id: string) => void;
+  product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  id,
-  name,
-  price,
-  imageSrc,
-  hoverImageSrc,
-  category,
-  gender,
-  isNew = false,
-  isSale = false,
-  discount = 0,
-  delay = 0,
-  onAddToCart
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [hoverImageLoaded, setHoverImageLoaded] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { addToCart } = useCart();
+  
+  // Calculate the sale price if applicable
+  const salePrice = product.is_sale && product.discount 
+    ? product.price * (1 - product.discount / 100) 
+    : null;
+  
+  // Format price as Indian Rupees
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(price);
+  };
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (onAddToCart) {
-      onAddToCart(id);
-    }
+    addToCart(product, 1);
   };
   
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFavorite(!isFavorite);
-  };
-  
-  const formattedPrice = new Intl.NumberFormat('en-IN', { 
-    style: 'currency', 
-    currency: 'INR',
-    maximumFractionDigits: 0
-  }).format(price);
-  
-  const originalPrice = discount > 0 
-    ? new Intl.NumberFormat('en-IN', { 
-        style: 'currency', 
-        currency: 'INR',
-        maximumFractionDigits: 0
-      }).format(price / (1 - discount/100))
-    : null;
-
-  const genderLabel = gender === 'male' ? 'Men' : gender === 'female' ? 'Women' : '';
-
   return (
-    <a 
-      href={`/product/${id}`}
-      className={cn(
-        "group block overflow-hidden bg-white rounded-lg transition-all duration-500 reveal",
-        isHovered ? "shadow-lg translate-y-[-5px]" : "shadow-sm"
-      )}
-      style={{ transitionDelay: `${delay * 0.1}s` }}
+    <Link 
+      to={`/product/${product.slug}`}
+      className="group block"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Product image */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-        {/* Main image and hover image */}
-        {hoverImageSrc ? (
-          <>
-            <img 
-              src={imageSrc}
-              alt={name}
-              className={cn(
-                "absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500",
-                imageLoaded ? "image-loaded" : "image-loading",
-                isHovered ? "opacity-0" : "opacity-100"
-              )}
-              onLoad={() => setImageLoaded(true)}
-            />
-            <img 
-              src={hoverImageSrc}
-              alt={`${name} - alternate view`}
-              className={cn(
-                "absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500",
-                hoverImageLoaded ? "image-loaded" : "image-loading",
-                isHovered ? "opacity-100" : "opacity-0"
-              )}
-              onLoad={() => setHoverImageLoaded(true)}
-            />
-          </>
-        ) : (
-          <img 
-            src={imageSrc}
-            alt={name}
-            className={cn(
-              "w-full h-full object-cover object-center transition-all duration-500",
-              imageLoaded ? "image-loaded" : "image-loading",
-              isHovered ? "scale-110" : "scale-100"
-            )}
-            onLoad={() => setImageLoaded(true)}
-          />
-        )}
+      <div className="relative overflow-hidden aspect-[3/4]">
+        {/* Product Image */}
+        <img 
+          src={isHovered && product.hover_image_url ? product.hover_image_url : product.image_url} 
+          alt={product.name}
+          className="w-full h-full object-cover object-center transition-all duration-500"
+        />
         
-        {/* Badge (New or Sale) */}
-        {(isNew || isSale) && (
-          <div className={cn(
-            "absolute top-3 left-3 px-3 py-1 text-xs font-medium rounded-full z-10",
-            isNew ? "bg-klassico-navy text-white" : "bg-red-500 text-white"
-          )}>
-            {isNew ? "New" : `${discount}% Off`}
-          </div>
-        )}
-        
-        {/* Gender badge if applicable */}
-        {gender && gender !== 'unisex' && (
-          <div className="absolute top-3 right-3 px-3 py-1 text-xs font-medium rounded-full bg-white text-klassico-dark z-10">
-            {genderLabel}
-          </div>
-        )}
-        
-        {/* Quick action buttons */}
-        <div className={cn(
-          "absolute bottom-0 left-0 right-0 p-3 flex justify-center gap-2 transition-all duration-500 bg-gradient-to-t from-black/30 to-transparent",
-          isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        )}>
-          <button
+        {/* Quick Actions */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between transition-transform duration-300 transform translate-y-full group-hover:translate-y-0">
+          <button 
             onClick={handleAddToCart}
-            className="glass text-white p-3 rounded-full transition-all duration-300 hover:bg-white hover:text-klassico-navy"
+            className="bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
             aria-label="Add to cart"
           >
             <ShoppingBag size={18} />
           </button>
           
-          <button
-            onClick={toggleFavorite}
-            className={cn(
-              "glass p-3 rounded-full transition-all duration-300 hover:bg-white",
-              isFavorite ? "text-red-500 hover:text-red-600" : "text-white hover:text-klassico-navy"
-            )}
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          <button 
+            className="bg-white text-black p-2 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Add to wishlist"
+            onClick={(e) => e.preventDefault()}
           >
-            <Heart size={18} fill={isFavorite ? "currentColor" : "none"} />
+            <Heart size={18} />
           </button>
+        </div>
+        
+        {/* Labels */}
+        <div className="absolute top-0 left-0 p-2 flex flex-col gap-1">
+          {product.is_new && (
+            <span className="bg-black text-white text-xs px-2 py-1">
+              NEW
+            </span>
+          )}
+          
+          {product.is_sale && (
+            <span className="bg-red-600 text-white text-xs px-2 py-1">
+              SALE
+            </span>
+          )}
         </div>
       </div>
       
-      {/* Product details */}
-      <div className="p-4">
-        <div className="mb-1 text-xs text-gray-500 uppercase tracking-wide flex justify-between">
-          <span>{category}</span>
-          {gender && gender !== 'unisex' && (
-            <span className="text-xs text-klassico-navy">{genderLabel}</span>
-          )}
-        </div>
-        <h3 className="font-medium text-klassico-dark mb-1 transition-colors duration-300 group-hover:text-klassico-navy">
-          {name}
+      {/* Product Info */}
+      <div className="mt-4">
+        <h3 className="text-sm font-medium text-gray-600">
+          {product.category?.name}
         </h3>
-        <div className="flex items-center gap-2">
-          <span className="font-semibold">{formattedPrice}</span>
-          {originalPrice && (
-            <span className="text-sm text-gray-500 line-through">{originalPrice}</span>
+        <h2 className="text-base font-medium mt-1">
+          {product.name}
+        </h2>
+        <div className="mt-2 flex items-center gap-2">
+          {salePrice ? (
+            <>
+              <span className="font-medium">{formatPrice(salePrice)}</span>
+              <span className="text-gray-500 line-through text-sm">
+                {formatPrice(product.price)}
+              </span>
+            </>
+          ) : (
+            <span className="font-medium">{formatPrice(product.price)}</span>
           )}
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
 

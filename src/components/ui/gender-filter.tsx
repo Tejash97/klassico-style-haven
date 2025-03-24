@@ -29,10 +29,10 @@ const GenderFilter: React.FC<GenderFilterProps> = ({ className }) => {
       <button 
         onClick={() => handleGenderChange('all')}
         className={cn(
-          "px-4 py-2 text-sm font-medium rounded transition-colors",
+          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
           currentGender === 'all' 
-            ? "bg-klassico-navy text-white" 
-            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+            ? "bg-black text-white border-black" 
+            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
         )}
       >
         All
@@ -40,10 +40,10 @@ const GenderFilter: React.FC<GenderFilterProps> = ({ className }) => {
       <button 
         onClick={() => handleGenderChange('male')}
         className={cn(
-          "px-4 py-2 text-sm font-medium rounded transition-colors",
+          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
           currentGender === 'male' 
-            ? "bg-klassico-navy text-white" 
-            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+            ? "bg-black text-white border-black" 
+            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
         )}
       >
         Men
@@ -51,10 +51,10 @@ const GenderFilter: React.FC<GenderFilterProps> = ({ className }) => {
       <button 
         onClick={() => handleGenderChange('female')}
         className={cn(
-          "px-4 py-2 text-sm font-medium rounded transition-colors",
+          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
           currentGender === 'female' 
-            ? "bg-klassico-navy text-white" 
-            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+            ? "bg-black text-white border-black" 
+            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
         )}
       >
         Women
@@ -62,10 +62,10 @@ const GenderFilter: React.FC<GenderFilterProps> = ({ className }) => {
       <button 
         onClick={() => handleGenderChange('unisex')}
         className={cn(
-          "px-4 py-2 text-sm font-medium rounded transition-colors",
+          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
           currentGender === 'unisex' 
-            ? "bg-klassico-navy text-white" 
-            : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+            ? "bg-black text-white border-black" 
+            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
         )}
       >
         Unisex

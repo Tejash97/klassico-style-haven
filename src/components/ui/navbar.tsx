@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, User, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
@@ -11,6 +11,8 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
+  const [showMenDropdown, setShowMenDropdown] = useState(false);
+  const [showWomenDropdown, setShowWomenDropdown] = useState(false);
   const { getCartCount } = useCart();
   const navigate = useNavigate();
   
@@ -60,49 +62,116 @@ const Navbar = () => {
     }
   };
 
+  const menCategories = categories.filter(cat => cat.gender === 'male' || cat.gender === 'unisex');
+  const womenCategories = categories.filter(cat => cat.gender === 'female' || cat.gender === 'unisex');
+
   return (
     <header className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      isScrolled ? "glass py-3 shadow-sm" : "py-5"
+      isScrolled ? "bg-white py-2 shadow-md" : "bg-white py-4"
     )}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
+        {/* Top navigation bar */}
+        <div className="border-b border-gray-200 pb-2 hidden md:flex justify-between text-xs">
+          <div className="flex space-x-4">
+            <a href="/store-locator" className="text-gray-600 hover:text-black">Store Locator</a>
+            <a href="/gift-cards" className="text-gray-600 hover:text-black">Gift Cards</a>
+          </div>
+          <div className="flex space-x-4">
+            <a href="/login" className="text-gray-600 hover:text-black flex items-center">
+              <User size={14} className="mr-1" /> Login
+            </a>
+            <a href="/wishlist" className="text-gray-600 hover:text-black">Wishlist</a>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <Link 
             to="/" 
-            className="relative z-50 text-2xl font-bold text-klassico-dark transition-opacity duration-300 hover:opacity-80"
+            className="relative z-50 text-2xl font-bold text-black transition-opacity duration-300 hover:opacity-80"
           >
             Klassico
           </Link>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300">Home</Link>
-            {categories.map(category => (
+            <div 
+              className="relative"
+              onMouseEnter={() => setShowMenDropdown(true)}
+              onMouseLeave={() => setShowMenDropdown(false)}
+            >
               <Link 
-                key={category.id}
-                to={`/${category.slug}`} 
-                className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300"
+                to="/products?gender=male" 
+                className="text-black font-medium hover:text-gray-800 transition-colors duration-300 flex items-center"
               >
-                {category.name}
+                Men <ChevronDown size={16} className="ml-1" />
               </Link>
-            ))}
-            <Link to="/about" className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300">About</Link>
+              
+              {showMenDropdown && (
+                <div className="absolute left-0 top-full bg-white shadow-lg rounded-b-md p-4 min-w-[200px] grid grid-cols-2 gap-4 z-50">
+                  {menCategories.map(category => (
+                    <Link 
+                      key={category.id}
+                      to={`/${category.slug}?gender=male`} 
+                      className="text-gray-800 hover:text-black transition-colors duration-300 whitespace-nowrap"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div 
+              className="relative"
+              onMouseEnter={() => setShowWomenDropdown(true)}
+              onMouseLeave={() => setShowWomenDropdown(false)}
+            >
+              <Link 
+                to="/products?gender=female" 
+                className="text-black font-medium hover:text-gray-800 transition-colors duration-300 flex items-center"
+              >
+                Women <ChevronDown size={16} className="ml-1" />
+              </Link>
+              
+              {showWomenDropdown && (
+                <div className="absolute left-0 top-full bg-white shadow-lg rounded-b-md p-4 min-w-[200px] grid grid-cols-2 gap-4 z-50">
+                  {womenCategories.map(category => (
+                    <Link 
+                      key={category.id}
+                      to={`/${category.slug}?gender=female`} 
+                      className="text-gray-800 hover:text-black transition-colors duration-300 whitespace-nowrap"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <Link to="/products" className="text-black font-medium hover:text-gray-800 transition-colors duration-300">
+              All Products
+            </Link>
+            
+            <Link to="/about" className="text-black font-medium hover:text-gray-800 transition-colors duration-300">
+              About
+            </Link>
           </nav>
           
           {/* Right Icons */}
           <div className="flex items-center space-x-4">
-            <form onSubmit={handleSearch} className="hidden md:flex items-center">
+            <form onSubmit={handleSearch} className="hidden md:flex items-center border rounded-md overflow-hidden">
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="rounded-l-md py-1 px-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-klassico-navy focus:border-transparent"
+                className="py-1 px-3 focus:outline-none text-sm"
               />
               <button 
                 type="submit"
-                className="rounded-r-md bg-klassico-navy text-white py-1 px-3 border border-klassico-navy hover:bg-opacity-90 transition-colors"
+                className="bg-gray-100 text-black py-1 px-3 hover:bg-gray-200 transition-colors"
               >
                 <Search size={16} />
               </button>
@@ -110,18 +179,18 @@ const Navbar = () => {
             
             <Link 
               to="/cart" 
-              className="relative text-klassico-dark p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
+              className="relative text-black p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
               aria-label="Shopping cart"
             >
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 bg-klassico-navy text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {getCartCount()}
               </span>
             </Link>
             
             {/* Mobile menu toggle */}
             <button 
-              className="md:hidden relative z-50 text-klassico-dark p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
+              className="md:hidden relative z-50 text-black p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -149,36 +218,41 @@ const Navbar = () => {
             />
             <button 
               type="submit"
-              className="bg-klassico-navy text-white py-2 px-4"
+              className="bg-gray-100 text-black py-2 px-4 hover:bg-gray-200"
             >
               <Search size={18} />
             </button>
           </div>
         </form>
         
-        <nav className="flex flex-col items-center space-y-6 text-xl">
+        <nav className="flex flex-col items-center space-y-6 text-xl w-full">
           <Link 
-            to="/" 
-            className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300"
+            to="/products?gender=male" 
+            className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Home
+            Men
+          </Link>
+
+          <Link 
+            to="/products?gender=female" 
+            className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Women
           </Link>
           
-          {categories.map(category => (
-            <Link 
-              key={category.id}
-              to={`/${category.slug}`} 
-              className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {category.name}
-            </Link>
-          ))}
+          <Link 
+            to="/products" 
+            className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            All Products
+          </Link>
           
           <Link 
             to="/about" 
-            className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300"
+            className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
             onClick={() => setMobileMenuOpen(false)}
           >
             About
@@ -186,11 +260,35 @@ const Navbar = () => {
           
           <Link 
             to="/cart" 
-            className="text-klassico-dark font-medium hover:text-klassico-navy transition-colors duration-300"
+            className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
             onClick={() => setMobileMenuOpen(false)}
           >
             Cart ({getCartCount()})
           </Link>
+
+          <div className="flex flex-col space-y-4 mt-6 w-full">
+            <Link 
+              to="/login" 
+              className="text-sm text-gray-600 hover:text-black transition-colors duration-300 flex items-center"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <User size={14} className="mr-1" /> Login / Register
+            </Link>
+            <Link 
+              to="/wishlist" 
+              className="text-sm text-gray-600 hover:text-black transition-colors duration-300"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Wishlist
+            </Link>
+            <Link 
+              to="/store-locator" 
+              className="text-sm text-gray-600 hover:text-black transition-colors duration-300"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Store Locator
+            </Link>
+          </div>
         </nav>
       </div>
     </header>

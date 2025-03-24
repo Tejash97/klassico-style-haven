@@ -32,6 +32,9 @@ const App = () => (
             <Route path="/jeans" element={<ProductsPage categorySlug="jeans" />} />
             <Route path="/blazers" element={<ProductsPage categorySlug="blazers" />} />
             <Route path="/kurtis" element={<ProductsPage categorySlug="kurtis" />} />
+            {/* Men and Women category pages */}
+            <Route path="/men" element={<ProductsPage gender="male" />} />
+            <Route path="/women" element={<ProductsPage gender="female" />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -35,21 +35,21 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="bg-klassico-navy text-white py-20">
+    <section className="bg-gray-100 py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 reveal">
-            Join the Klassico Family
+          <h2 className="text-3xl font-medium mb-6">
+            Subscribe to our newsletter
           </h2>
           
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto reveal">
-            Subscribe to receive updates on new collections, exclusive offers, and styling tips. 
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Stay updated with the latest trends, new arrivals, and exclusive offers. 
             Be the first to know about our seasonal sales and limited-edition collaborations.
           </p>
           
           <form 
             onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto reveal"
+            className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
           >
             <div className="flex-1 relative">
               <input
@@ -58,25 +58,25 @@ const Newsletter = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting || isSubmitted}
-                className="w-full px-4 py-3 rounded-lg text-klassico-dark placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:border-black transition-all duration-300"
                 aria-label="Email address"
               />
               {error && (
-                <p className="absolute text-red-400 text-sm mt-1">{error}</p>
+                <p className="absolute text-red-600 text-sm mt-1">{error}</p>
               )}
             </div>
             
             <button
               type="submit"
               disabled={isSubmitting || isSubmitted}
-              className={`px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-300 ${
+              className={`px-6 py-3 font-medium flex items-center justify-center gap-2 transition-all duration-300 ${
                 isSubmitted 
-                  ? "bg-green-600 hover:bg-green-700" 
-                  : "bg-white text-klassico-navy hover:bg-gray-100"
+                  ? "bg-green-600 hover:bg-green-700 text-white" 
+                  : "bg-black text-white hover:bg-gray-900"
               }`}
             >
               {isSubmitting ? (
-                <div className="w-5 h-5 border-2 border-klassico-navy border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : isSubmitted ? (
                 <>
                   <Check size={18} />
@@ -90,10 +90,6 @@ const Newsletter = () => {
               )}
             </button>
           </form>
-          
-          <p className="text-xs text-gray-400 mt-6 max-w-lg mx-auto">
-            By subscribing, you agree to our Privacy Policy and consent to receive updates from Klassico Jeans.
-          </p>
         </div>
       </div>
     </section>
