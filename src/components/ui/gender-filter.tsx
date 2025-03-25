@@ -1,75 +1,72 @@
 
 import React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { useSearchParams } from 'react-router-dom';
 
 interface GenderFilterProps {
-  className?: string;
+  currentCategory?: string;
 }
 
-const GenderFilter: React.FC<GenderFilterProps> = ({ className }) => {
+const GenderFilter: React.FC<GenderFilterProps> = ({ currentCategory }) => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const currentGender = searchParams.get('gender') || 'all';
+  const currentGender = searchParams.get('gender');
+  const basePath = currentCategory ? `/${currentCategory}` : '/products';
   
-  const handleGenderChange = (gender: string) => {
-    const newParams = new URLSearchParams(searchParams);
+  // Preserve other query params when changing gender
+  const getFilterUrl = (gender: string | null) => {
+    const params = new URLSearchParams(searchParams);
     
-    if (gender === 'all') {
-      newParams.delete('gender');
+    if (gender) {
+      params.set('gender', gender);
     } else {
-      newParams.set('gender', gender);
+      params.delete('gender');
     }
     
-    navigate(`?${newParams.toString()}`);
+    const queryString = params.toString();
+    return `${basePath}${queryString ? `?${queryString}` : ''}`;
   };
   
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
-      <button 
-        onClick={() => handleGenderChange('all')}
-        className={cn(
-          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
-          currentGender === 'all' 
-            ? "bg-black text-white border-black" 
-            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
-        )}
-      >
-        All
-      </button>
-      <button 
-        onClick={() => handleGenderChange('male')}
-        className={cn(
-          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
+    <div className="flex flex-col space-y-2">
+      <a 
+        href={getFilterUrl('male')}
+        className={`py-2 px-3 rounded-md transition-colors ${
           currentGender === 'male' 
-            ? "bg-black text-white border-black" 
-            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
-        )}
+            ? 'bg-black text-white' 
+            : 'bg-white text-gray-800 hover:bg-gray-100'
+        }`}
       >
         Men
-      </button>
-      <button 
-        onClick={() => handleGenderChange('female')}
-        className={cn(
-          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
+      </a>
+      <a 
+        href={getFilterUrl('female')}
+        className={`py-2 px-3 rounded-md transition-colors ${
           currentGender === 'female' 
-            ? "bg-black text-white border-black" 
-            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
-        )}
+            ? 'bg-black text-white' 
+            : 'bg-white text-gray-800 hover:bg-gray-100'
+        }`}
       >
         Women
-      </button>
-      <button 
-        onClick={() => handleGenderChange('unisex')}
-        className={cn(
-          "px-4 py-2 text-sm font-medium rounded-none border transition-colors",
+      </a>
+      <a 
+        href={getFilterUrl('unisex')}
+        className={`py-2 px-3 rounded-md transition-colors ${
           currentGender === 'unisex' 
-            ? "bg-black text-white border-black" 
-            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
-        )}
+            ? 'bg-black text-white' 
+            : 'bg-white text-gray-800 hover:bg-gray-100'
+        }`}
       >
         Unisex
-      </button>
+      </a>
+      <a 
+        href={getFilterUrl(null)}
+        className={`py-2 px-3 rounded-md transition-colors ${
+          !currentGender 
+            ? 'bg-black text-white' 
+            : 'bg-white text-gray-800 hover:bg-gray-100'
+        }`}
+      >
+        All
+      </a>
     </div>
   );
 };

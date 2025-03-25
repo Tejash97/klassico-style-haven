@@ -62,8 +62,16 @@ const Navbar = () => {
     }
   };
 
+  // Filter categories by gender
   const menCategories = categories.filter(cat => cat.gender === 'male' || cat.gender === 'unisex');
   const womenCategories = categories.filter(cat => cat.gender === 'female' || cat.gender === 'unisex');
+
+  // Main category pages
+  const mainCategories = [
+    { name: 'Jeans', slug: 'jeans' },
+    { name: 'Blazers', slug: 'blazers' },
+    { name: 'Kurtis', slug: 'kurtis' }
+  ];
 
   return (
     <header className={cn(
@@ -96,13 +104,14 @@ const Navbar = () => {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            {/* Men's section */}
             <div 
               className="relative"
               onMouseEnter={() => setShowMenDropdown(true)}
               onMouseLeave={() => setShowMenDropdown(false)}
             >
               <Link 
-                to="/products?gender=male" 
+                to="/men" 
                 className="text-black font-medium hover:text-gray-800 transition-colors duration-300 flex items-center"
               >
                 Men <ChevronDown size={16} className="ml-1" />
@@ -119,17 +128,27 @@ const Navbar = () => {
                       {category.name}
                     </Link>
                   ))}
+                  {mainCategories.map(category => (
+                    <Link 
+                      key={category.slug}
+                      to={`/${category.slug}?gender=male`} 
+                      className="text-gray-800 hover:text-black transition-colors duration-300 whitespace-nowrap font-medium"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
             
+            {/* Women's section */}
             <div 
               className="relative"
               onMouseEnter={() => setShowWomenDropdown(true)}
               onMouseLeave={() => setShowWomenDropdown(false)}
             >
               <Link 
-                to="/products?gender=female" 
+                to="/women" 
                 className="text-black font-medium hover:text-gray-800 transition-colors duration-300 flex items-center"
               >
                 Women <ChevronDown size={16} className="ml-1" />
@@ -146,9 +165,29 @@ const Navbar = () => {
                       {category.name}
                     </Link>
                   ))}
+                  {mainCategories.map(category => (
+                    <Link 
+                      key={category.slug}
+                      to={`/${category.slug}?gender=female`} 
+                      className="text-gray-800 hover:text-black transition-colors duration-300 whitespace-nowrap font-medium"
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
+            
+            {/* Main Category Links */}
+            {mainCategories.map(category => (
+              <Link 
+                key={category.slug}
+                to={`/${category.slug}`} 
+                className="text-black font-medium hover:text-gray-800 transition-colors duration-300"
+              >
+                {category.name}
+              </Link>
+            ))}
             
             <Link to="/products" className="text-black font-medium hover:text-gray-800 transition-colors duration-300">
               All Products
@@ -227,7 +266,7 @@ const Navbar = () => {
         
         <nav className="flex flex-col items-center space-y-6 text-xl w-full">
           <Link 
-            to="/products?gender=male" 
+            to="/men" 
             className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
             onClick={() => setMobileMenuOpen(false)}
           >
@@ -235,12 +274,24 @@ const Navbar = () => {
           </Link>
 
           <Link 
-            to="/products?gender=female" 
+            to="/women" 
             className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
             onClick={() => setMobileMenuOpen(false)}
           >
             Women
           </Link>
+          
+          {/* Main Categories in Mobile Menu */}
+          {mainCategories.map(category => (
+            <Link 
+              key={category.slug}
+              to={`/${category.slug}`} 
+              className="text-black font-medium hover:text-gray-600 transition-colors duration-300 w-full border-b border-gray-100 pb-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {category.name}
+            </Link>
+          ))}
           
           <Link 
             to="/products" 
